@@ -28,3 +28,23 @@
 ;; Write a function which returns the total number of elements in a sequence.
 ;; Special Restrictions: count
 #(reduce (fn [x _] (inc x)) 0 %)
+
+;; 23. Reverse a Sequence
+;; Write a function which reverses a sequence.
+#(reduce (fn [res x] (conj res x)) () %)
+#(reduce (fn [res x] (cons x res)) [] %)
+#(into () %)
+(fn [s]
+  (loop [s s res ()]
+    (if (empty? s) res
+      (recur (next s) (conj res (first s))))))
+
+;; 24. Sum It All Up
+;; Write a function which returns the sum of a sequence of numbers.
+reduce +
+#(apply + %)
+
+;; 25. Find the odd numbers
+;; Write a function which returns only the odd numbers from a sequence.
+filter odd?
+#(filter odd? %)
