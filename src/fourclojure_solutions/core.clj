@@ -92,3 +92,10 @@ filter odd?
 
 (fn flat [x] (if (coll? x) (mapcat flat x) [x]))
 
+;; 29. Get the Caps
+;; Write a function which takes a string and returns a new string
+;; containing only the capital letters.
+(fn [s] (apply str (filter #(Character/isUpperCase %) s)))
+#(clojure.string/replace % #"[^A-Z]+" "")
+#(apply str (re-seq #"[A-Z]" %))
+
