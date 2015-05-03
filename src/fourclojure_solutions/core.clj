@@ -31,6 +31,7 @@
 
 ;; 23. Reverse a Sequence
 ;; Write a function which reverses a sequence.
+;; Special Restrictions: reverse, rseq
 #(reduce (fn [res x] (conj res x)) () %)
 #(reduce (fn [res x] (cons x res)) [] %)
 #(into () %)
@@ -61,3 +62,11 @@ filter odd?
 
 ;; TDD principle: Write the minimum amount of code required to make the test pass :)
 (fn [i] (take i '(1 1 2 3 5 8 13 21)))
+
+
+;; 27. Palindrome Detector
+;; Write a function which returns true if the given sequence is a palindrome.
+;; Hint: "racecar" does not equal '(\r \a \c \e \c \a \r)
+#(= (seq %) (reverse %))
+#(let [median (quot (count %) 2)]
+  (= (take median %) (take median (reverse %))))
