@@ -48,3 +48,16 @@ reduce +
 ;; Write a function which returns only the odd numbers from a sequence.
 filter odd?
 #(filter odd? %)
+
+;; 26. Fibonacci Sequence
+;; Write a function which returns the first X fibonacci numbers.
+#(loop [s [1 1]]
+  (if (= % (count s)) s
+      (let [f1 (-> s butlast last)
+            f2 (last s)]
+        (recur (conj s (+ f1 f2))))))
+#(take % (map first (iterate (fn [[a b]] [b (+ a b)]) [1 1])))
+#(take % ((fn fib [a b] (cons a (lazy-seq (fib b (+ a b))))) 1 1))
+
+;; TDD principle: Write the minimum amount of code required to make the test pass :)
+(fn [i] (take i '(1 1 2 3 5 8 13 21)))
