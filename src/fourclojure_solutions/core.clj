@@ -99,3 +99,13 @@ filter odd?
 #(clojure.string/replace % #"[^A-Z]+" "")
 #(apply str (re-seq #"[A-Z]" %))
 
+;; 30. Compress a Sequence
+;; Write a function which removes consecutive duplicates from a sequence.
+#(reduce
+  (fn [acc x]
+    (if (= x (last acc))
+      acc
+      (conj acc x)))
+  [] %)
+
+#(map first (partition-by identity %))
