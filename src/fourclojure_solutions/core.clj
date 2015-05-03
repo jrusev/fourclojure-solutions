@@ -70,3 +70,25 @@ filter odd?
 #(= (seq %) (reverse %))
 #(let [median (quot (count %) 2)]
   (= (take median %) (take median (reverse %))))
+
+;; 28. Flatten a Sequence
+;; Write a function which flattens a sequence.
+;; Special Restrictions: flatten
+(fn flat [s]
+  (reduce
+   (fn [acc x]
+     (concat acc
+             (if (sequential? x) (flat x) [x])))
+   [] s))
+
+(fn flat [coll]
+  (let [x (first coll) xs (next coll)]
+    (concat
+     (if (sequential? x)
+       (flat x)
+       [x])
+     (when (sequential? xs)
+       (flat xs)))))
+
+(fn flat [x] (if (coll? x) (mapcat flat x) [x]))
+
