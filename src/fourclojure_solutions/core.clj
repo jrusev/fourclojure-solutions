@@ -109,3 +109,26 @@ filter odd?
   [] %)
 
 #(map first (partition-by identity %))
+
+;; 31. Pack a Sequence
+;; Write a function which packs consecutive duplicates into sub-lists.
+;; (= (__ [1 1 2 1 1 1 3 3]) '((1 1) (2) (1 1 1) (3 3)))
+#(partition-by identity %)
+
+
+;; 32. Duplicate a Sequence
+;; Write a function which duplicates each element of a sequence.
+;; (= (__ [1 2 3]) '(1 1 2 2 3 3))
+#(reduce (fn [acc x] (conj acc x x)) [] %)
+#(mapcat list % %)
+#(interleave % %)
+
+;; 33. Replicate a Sequence
+;; Write a function which replicates each element of a sequence a
+;; variable number of times.
+;; (= (__ [1 2 3] 2) '(1 1 2 2 3 3))
+(fn [coll n]
+  (if (= n 1) coll
+    (apply interleave (repeat n coll))))
+(fn [coll n] (mapcat #(repeat n %) coll))
+#(mapcat (partial repeat %2) %1)
