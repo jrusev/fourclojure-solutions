@@ -69,7 +69,7 @@ filter odd?
 #(take % (map first (iterate (fn [[a b]] [b (+ a b)]) [1 1])))
 #(take % ((fn fib [a b] (cons a (lazy-seq (fib b (+ a b))))) 1 1))
 
-;; TDD principle: Write the minimum amount of code required to make the test pass :)
+;; TDD principle: Write the minimum amount of code required to pass the test :)
 (fn [i] (take i '(1 1 2 3 5 8 13 21)))
 
 
@@ -188,3 +188,11 @@ mapcat list
        (rest s1)
        (rest s2)
        (conj result (first s1) (first s2))))))
+
+;; 40. Interpose a Seq
+;; Write a function which separates the items of a sequence by a given value.
+;; Special Restrictions: interpose
+;; (= (__ 0 [1 2 3]) [1 0 2 0 3])
+#(butlast (interleave %2 (repeat %)))
+#(next (interleave (repeat %) %2))
+#(next (mapcat (fn [x] [% x]) %2))
