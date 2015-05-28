@@ -146,3 +146,45 @@ filter odd?
     (apply interleave (repeat n coll))))
 (fn [coll n] (mapcat #(repeat n %) coll))
 #(mapcat (partial repeat %2) %1)
+
+;; 34. Implement range
+;; Write a function which creates a list of all integers in a given range.
+;; Special Restrictions: range
+;; (= (__ 1 4) '(1 2 3))
+(fn [l r]
+  (loop [rng [l] x (inc l)]
+    (if (= x r) rng
+      (recur (conj rng x) (inc x)))))
+(fn [x y] (take (- y x) (iterate inc x)))
+(fn [from to]
+  (take-while #(< % to)
+              (iterate inc from)))
+
+;; 38. Maximum value
+;; Write a function which takes a variable number of parameters
+;; and returns the maximum value
+;; Special Restrictions: max, max-key
+;; (= (__ 1 8 3 4) 8)
+(fn [& xs] (reduce (fn [a b] (if (> a b) a b)) xs))
+(comp last sort list)
+#(last (sort %&))
+
+;; 39. Interleave Two Seqs
+;; Write a function which takes two sequences and returns the first item
+;; from each, then the second item from each, then the third, etc.
+;; Special Restrictions: interleave
+;; (= (__ [1 2 3] [:a :b :c]) '(1 :a 2 :b 3 :c))
+#(mapcat list %1 %2)
+mapcat (fn [& x] x)
+mapcat list
+
+(fn [s1 s2]
+  (loop [s1 s1
+         s2 s2
+         result []]
+    (if-not (and (seq s1) (seq s2))
+      result
+      (recur
+       (rest s1)
+       (rest s2)
+       (conj result (first s1) (first s2))))))
