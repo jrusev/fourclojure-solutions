@@ -196,3 +196,31 @@ mapcat list
 #(butlast (interleave %2 (repeat %)))
 #(next (interleave (repeat %) %2))
 #(next (mapcat (fn [x] [% x]) %2))
+
+;; 41. Drop Every Nth Item
+;; Write a function which drops every Nth item from a sequence.
+;; (= (__ [1 2 3 4 5 6 7 8] 3) [1 2 4 5 7 8])
+#(->> % (partition-all (dec %2) %2) flatten)
+#(apply concat (partition-all (dec %2) %2 %))
+#(mapcat (partial take (dec %2)) (partition-all %2 %))
+
+
+;; 42. Factorial Fun
+;; Write a function which calculates factorials.
+#(apply * (range 1 (inc %)))
+
+(fn ! [n]
+  (if (zero? n) 1
+      (* n (! (- n 1)))))
+
+;; 43. Reverse Interleave
+;; Write a function which reverses the interleave process into x
+;; number of subsequences.
+;; (= (__ [1 2 3 4 5 6] 2) '((1 3 5) (2 4 6)))
+(fn [coll n]
+  (reduce #(map conj % %2)
+          (take n (repeat []))
+          (partition n coll)))
+
+(fn [coll n] (map #(take-nth n (drop % coll)) (range n)))
+#(apply map list (partition %2 %)) ; See goo.gl/oklqNY
