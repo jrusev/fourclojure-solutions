@@ -224,3 +224,18 @@ mapcat list
 
 (fn [coll n] (map #(take-nth n (drop % coll)) (range n)))
 #(apply map list (partition %2 %)) ; See goo.gl/oklqNY
+
+
+;; 44. Rotate Sequence
+;; Write a function which can rotate a sequence in either direction.
+;; (= (__ 2 [1 2 3 4 5]) '(3 4 5 1 2))
+(fn [n coll]
+  (let [index (mod n (count coll))
+        [a b] (split-at index coll)]
+    (concat b a )))
+
+#(let [i (mod % (count %2))] (concat (drop i %2) (take i %2))))
+#(let [[a b] (split-at (mod % (count %2)) %2)] (concat b a))
+#(let [c (count %2)] (take c (drop (mod % c) (cycle %2))))
+#(apply concat ((juxt drop take) (mod % (count %2)) %2))
+
