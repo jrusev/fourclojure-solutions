@@ -239,3 +239,40 @@ mapcat list
 #(let [c (count %2)] (take c (drop (mod % c) (cycle %2))))
 #(apply concat ((juxt drop take) (mod % (count %2)) %2))
 
+;; 45. Intro to Iterate
+;; The iterate function can be used to produce an infinite lazy seq.
+;; (= __ (take 5 (iterate #(+ 3 %) 1)))
+[1 4 7 10 13]
+(->> (range) (rest) (take-nth 3) (take 5))
+
+;; 46. Flipping out
+;; Write a higher-order function which flips the order of the
+;; arguments of an input function.
+;; (= 3 ((__ nth) 2 [1 2 3 4 5]))
+#(fn [& args] (apply % (reverse args)))
+(fn [f] #(f %2 %))
+
+;; 47. Contain Yourself
+;; The contains? function checks if a KEY is present in a given collection.
+;; This often leads beginner clojurians to use it incorrectly with
+;; numerically indexed collections like vectors and lists.
+;; For numerically indexed collections like vectors, this tests if
+;; the numeric key is within the range of indexes.
+;; Examples:
+(contains? [:a :b :c] :b)  ;=> false
+(contains? [:a :b :c] 2)   ;=> true
+(contains? "f" 0)          ;=> true
+(contains? "f" 1)          ;=> false
+
+;; 48. Intro to some
+;; The some function takes a predicate function and a collection.
+;; It returns the first logical true value of (predicate x) where x
+;; is an item in the collection.
+(= 6 (some #{2 7 6} [5 6 7 8]))
+(= 6 (some #(when (even? %) %) [5 6 7 8]))
+
+;; 49. Split a sequence
+;; Write a function which will split a sequence into two parts.
+;; (= (__ 3 [1 2 3 4 5 6]) [[1 2 3] [4 5 6]])
+#(vector (take % %2) (drop % %2))
+(juxt take drop)
