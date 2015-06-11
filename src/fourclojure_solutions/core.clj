@@ -322,3 +322,22 @@ mapcat list
     (sort-by count >)
      first))
 
+
+;; 54. Partition a Sequence
+;; Write a function which returns a sequence of lists of x items each.
+;; Lists of less than x items should not be returned.
+;; Special Restrictions: partition, partition-all
+;; (= (__ 3 (range 8)) '((0 1 2) (3 4 5)))
+(fn [n coll]
+  (loop [xs coll
+         result []]
+    (let [chunk (take n xs)]
+      (if (= n (count chunk))
+        (recur (drop n xs) (conj result chunk))
+        result))))
+
+(fn f [n x]
+  (if (>= (count x) n)
+    (cons (take n x) (f n (drop n x)))))
+
+#(take-nth % (apply map list (take % (iterate next %2))))
