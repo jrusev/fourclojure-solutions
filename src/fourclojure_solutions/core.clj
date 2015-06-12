@@ -323,6 +323,13 @@ mapcat list
     (cons [])
     (sort-by count >)
      first))
+   
+(fn [xs]
+  (->>
+    (range (count xs) 1 -1)
+    (mapcat #(partition % 1 xs))
+    (filter #(->> (apply sorted-set %) seq (= %)))
+    first vec))
 
 
 ;; 54. Partition a Sequence
