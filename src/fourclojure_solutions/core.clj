@@ -251,6 +251,7 @@ mapcat list
 ;; arguments of an input function.
 ;; (= 3 ((__ nth) 2 [1 2 3 4 5]))
 #(fn [& args] (apply % (reverse args)))
+#(fn [a b] (% b a))
 (fn [f] #(f %2 %))
 
 ;; 47. Contain Yourself
