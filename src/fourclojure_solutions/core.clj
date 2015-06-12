@@ -223,6 +223,7 @@ mapcat list
           (partition n coll)))
 
 (fn [coll n] (map #(take-nth n (drop % coll)) (range n)))
+#(vals (group-by (fn [i] (mod i %2)) %1))
 #(apply map list (partition %2 %)) ; See goo.gl/oklqNY
 
 
