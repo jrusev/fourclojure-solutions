@@ -341,3 +341,20 @@ mapcat list
     (cons (take n x) (f n (drop n x)))))
 
 #(take-nth % (apply map list (take % (iterate next %2))))
+
+;; 55. Count Occurrences
+;; Write a function which returns a map containing the number of
+;; occurences of each distinct item in a sequence.
+;; Special Restrictions: frequencies
+;; (= (__ [1 1 2 3 2 1 1]) {1 4, 2 2, 3 1})
+#(reduce
+  (fn [result x]
+    (assoc result x
+           (if-let [count (get result x)] (inc count) 1)))
+  {} %)
+
+#(into {} (map (fn [[k v]] [k (count v)]) (group-by identity %)))
+#(reduce (fn [res x] (update-in res [x] (fnil inc 0))) {} %)
+#(apply merge-with + (map (fn [a] {a 1}) %))
+reduce #(assoc % %2 (+ 1 (% %2 0))) {}
+reduce #(merge-with + % {%2 1}) {}
