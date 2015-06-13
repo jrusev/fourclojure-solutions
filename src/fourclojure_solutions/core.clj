@@ -10,8 +10,12 @@
 ;; Write a function which returns the last element in a sequence.
 ;; Special Restrictions: last
 ;; (= (__ [1 2 3 4 5]) 5)
-(fn[coll] (nth coll (dec (count coll))))
-(comp first reverse)
+#(if (next %) (recur (next %)) (first %))
+#(nth % (dec (count %)))
+#(first (take-last 1 %))
+#(first(reverse %))
+reduce #(do %2)
+#(peek(vec %))
 
 ;; 20. Penultimate Element
 ;; Write a function which returns the second to last element from a sequence.
