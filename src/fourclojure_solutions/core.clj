@@ -239,7 +239,7 @@ mapcat list
         [a b] (split-at index coll)]
     (concat b a )))
 
-#(let [i (mod % (count %2))] (concat (drop i %2) (take i %2))))
+#(let [i (mod % (count %2))] (concat (drop i %2) (take i %2)))
 #(let [[a b] (split-at (mod % (count %2)) %2)] (concat b a))
 #(let [c (count %2)] (take c (drop (mod % c) (cycle %2))))
 #(apply concat ((juxt drop take) (mod % (count %2)) %2))
@@ -371,3 +371,4 @@ mapcat list
 #(apply merge-with + (map (fn [a] {a 1}) %))
 reduce #(assoc % %2 (+ 1 (% %2 0))) {}
 reduce #(merge-with + % {%2 1}) {}
+
