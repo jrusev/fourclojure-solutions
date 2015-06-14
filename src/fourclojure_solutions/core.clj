@@ -379,3 +379,30 @@ reduce #(merge-with + % {%2 1}) {}
 ;; (= (__ [1 2 1 3 1 2 4]) [1 2 3 4])
 reduce #(if (some #{%2} %) % (conj % %2)) []
 reduce #(if ((set %) %2) % (conj % %2)) []
+
+;; 57. Simple Recursion
+;; A recursive function is a function which calls itself.
+;; This is one of the fundamental techniques used in functional programming.
+;; (= __ ((fn foo [x] (when (> x 0) (conj (foo (dec x)) x))) 5))
+[5 4 3 2 1]
+
+;; 58. Function Composition
+;; Write a function which allows you to create function compositions.
+;; The parameter list should take a variable number of functions, and
+;; create a function applies them from right-to-left.
+;; Special Restrictions: comp
+;; (= [3 2 1] ((__ rest reverse) [1 2 3 4]))
+(fn [& fs]
+  (fn [& args]
+    (reduce (fn [x f] (f x))
+            (apply (last fs) args)
+            (rest (reverse fs)))))
+
+(fn [& f]
+  (let [[g & f] (reverse f)]
+    (fn [& a]
+      (reduce #(%2 %1) (apply g a) f))))
+
+(fn c [h & t] (if (empty? t) h #(h (apply (apply c t) %&))))
+(fn [& s] (reduce (fn [f g] #(f (apply g %&))) s))
+
