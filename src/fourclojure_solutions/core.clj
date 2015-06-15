@@ -312,7 +312,7 @@ mapcat list
   (loop [[x & xs] coll
          curr [x]
          longest [x]]
-    (if-not (seq? xs)
+    (if (empty? xs)
       (if (second longest) longest [])
       (let [y (first xs)
             curr (if (< x y) (conj curr y) [y])
