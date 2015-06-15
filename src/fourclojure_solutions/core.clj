@@ -406,3 +406,16 @@ reduce #(if ((set %) %2) % (conj % %2)) []
 (fn c [h & t] (if (empty? t) h #(h (apply (apply c t) %&))))
 (fn [& s] (reduce (fn [f g] #(f (apply g %&))) s))
 
+;; 59. Juxtaposition
+;; Take a set of functions and return a new function that takes a
+;; variable number of arguments and returns a sequence containing the
+;; result of applying each function left-to-right to the argument
+;; list.
+;; Special Restrictions: juxt
+;; (fn [& funcs] (fn [& args] (map #(apply % args) funcs)))
+(fn [& fs]
+  (fn [& args]
+    (map #(apply % args) fs)))
+
+#(fn [& r] (map (fn [f] (apply f r)) %&))
+
