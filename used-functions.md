@@ -22,6 +22,7 @@ if-let
 interleave
 into
 last
+lazy-cat
 lazy-seq
 let
 list
@@ -68,6 +69,7 @@ iterate
 juxt
 map
 mapcat
+memoize
 merge-with
 partial
 partition-by

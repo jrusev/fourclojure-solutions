@@ -418,3 +418,18 @@ reduce #(if ((set %) %2) % (conj % %2)) []
 
 #(fn [& r] (map (fn [f] (apply f r)) %&))
 
+;; 60. Sequence Reductions
+;; Write a function which behaves like reduce, but returns each
+;; intermediate value of the reduction. Your function must accept either
+;; two or three arguments, and the return sequence must be lazy.
+;; Special Restrictions: reductions
+;; (= (take 5 (__ + (range))) [0 1 3 6 10])
+(fn reduct
+  ([f [x & xs]] (reduct f x xs))
+  ([f x [y & xs]]
+   (cons x (if y (lazy-seq (reduct f (f x y) xs))))))
+
+apply (fn [f i & s]
+       (#(% %) (memoize #(cons i (lazy-seq (map f (% %) s))))))
+
+apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
