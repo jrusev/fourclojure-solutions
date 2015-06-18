@@ -77,6 +77,7 @@ merge-with
 partial
 partition-by
 reduce
+reductions
 some
 sort-by
 take-while
