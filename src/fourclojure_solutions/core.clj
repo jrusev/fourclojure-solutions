@@ -433,3 +433,12 @@ apply (fn [f i & s]
        (#(% %) (memoize #(cons i (lazy-seq (map f (% %) s))))))
 
 apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
+
+;; 61. Map Construction
+;; Write a function which takes a vector of keys and a vector of
+;; values and constructs a map from them.
+;; Special Restrictions: zipmap
+;; (= (__ [:a :b :c] [1 2 3]) {:a 1, :b 2, :c 3})
+#(apply assoc {} (interleave % %2))
+#(apply merge (map hash-map % %2))
+#(into {} (map vector % %2))

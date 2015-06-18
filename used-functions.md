@@ -16,6 +16,7 @@ flatten
 fn
 format
 get
+hash-map
 identity
 if
 if-let
@@ -27,6 +28,7 @@ lazy-seq
 let
 list
 loop
+merge
 mod
 next
 nth
@@ -58,6 +60,7 @@ vec
 vector
 when
 zero?
+zipmap
 
 ->>
 apply
