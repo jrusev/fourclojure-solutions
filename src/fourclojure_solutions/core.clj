@@ -451,3 +451,23 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 #(reductions (fn [x _] (% x)) %2 (range))
 (fn it [f x] (cons x (lazy-seq (it f (f x)))))
 (fn it [f x] (lazy-cat [x] (it f (f x))))
+
+;; 63. Group a Sequence
+;; Given a function f and a sequence s, write a function which returns
+;; a map. The keys should be the values of f applied to each item in
+;; s. The value at each key should be a vector of corresponding items
+;; in the order they appear in s.
+;; Special Restrictions: group-by
+;; (= (__ #(> % 5) [1 3 6 8]) {false [1 3], true [6 8]})
+(fn [f s]
+  (reduce
+   (fn [m x] (update-in m [(f x)] (fnil #(conj % x) [])))
+   {} s))
+
+#(reduce
+  (fn [m x] (assoc m (% x) (conj (m (% x) []) x)))
+  {} %2)
+
+(fn [f s] (reduce #(merge-with concat % {(f %2) [%2]}) {} s))
+#(apply merge-with into (map (fn [x] {(% x) [x]}) %2))
+#(apply merge-with into (for [x %2] {(% x) [x]}))
