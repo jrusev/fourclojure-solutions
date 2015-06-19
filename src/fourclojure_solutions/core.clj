@@ -448,8 +448,6 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 ;; function which returns an infinite lazy sequence of x, (f x), (f (f x))...
 ;; Special Restrictions: iterate
 ;; (= (take 5 (__ #(* 2 %) 1)) [1 2 4 8 16])
-(fn [f x] (reductions #(%2 %1) x (repeat f)))
-#(reductions (fn [i _] (%1 i)) (repeat %2))
 #(reductions (fn [x _] (% x)) %2 (range))
 (fn it [f x] (cons x (lazy-seq (it f (f x)))))
 (fn it [f x] (lazy-cat [x] (it f (f x))))
