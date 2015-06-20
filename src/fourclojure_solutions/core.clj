@@ -493,3 +493,7 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 
 (comp {\# :set \{ :map \[ :vector \c :list} first str)
 
+;; 66. Greatest Common Divisor
+;; Given two integers, write a function which returns the GCD.
+#(if (zero? %2) % (recur %2 (mod % %2)))
+
