@@ -1,6 +1,8 @@
 assoc
+associative?
 butlast
 concat
+cond
 conj
 cons
 contains?
@@ -9,6 +11,7 @@ cycle
 dec
 defn
 drop
+empty
 empty?
 even?
 first
@@ -20,6 +23,7 @@ hash-map
 identity
 if
 if-let
+ifn?
 interleave
 into
 last
@@ -43,6 +47,7 @@ recur
 repeat
 rest
 reverse
+reversible?
 second
 seq
 sequential?

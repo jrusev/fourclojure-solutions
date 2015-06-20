@@ -471,3 +471,25 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 (fn [f s] (reduce #(merge-with concat % {(f %2) [%2]}) {} s))
 #(apply merge-with into (map (fn [x] {(% x) [x]}) %2))
 #(apply merge-with into (for [x %2] {(% x) [x]}))
+
+;; 65. Black Box Testing
+;; Write a function which takes a collection and returns one of :map,
+;; :set, :list, or :vector - describing the type of collection it was
+;; given. You won't be allowed to inspect their class or use the
+;; built-in predicates like list? - the point is to poke at them and
+;; understand their behavior.
+;; (= [:map :set :vector :list] (map __ [{} #{} [] ()]))
+#(cond
+  (not (ifn? %)) :list
+  (reversible? %) :vector
+  (associative? %) :map
+  :else :set)
+
+#(let [e (empty %)]
+   (case e
+     {}  :map
+     #{} :set
+     (first (conj e :vector :list))))
+
+(comp {\# :set \{ :map \[ :vector \c :list} first str)
+
