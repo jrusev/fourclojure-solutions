@@ -9,7 +9,6 @@ contains?
 count
 cycle
 dec
-defn
 drop
 empty
 empty?
@@ -21,7 +20,6 @@ format
 get
 hash-map
 identity
-if
 if-let
 ifn?
 interleave
@@ -70,6 +68,7 @@ zipmap
 ->>
 apply
 comp
+every?
 filter
 fnil
 group-by
@@ -83,6 +82,7 @@ partial
 partition-by
 reduce
 reductions
+remove
 some
 sort-by
 take-while

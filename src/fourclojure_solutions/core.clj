@@ -497,3 +497,24 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 ;; Given two integers, write a function which returns the GCD.
 #(if (zero? %2) % (recur %2 (mod % %2)))
 
+
+;; 67. Prime Numbers
+;; Write a function which returns the first x number of prime numbers.
+(fn [n]
+  (let [prime? (fn [x] (not (some #(zero? (mod x %)) (range 2 x))))]
+  (take n (filter prime? (iterate inc 2)))))
+
+(fn [n]
+  (->>
+  (range)
+  (drop 2)
+  (filter (fn [x] (every? #(< 0 (mod x %)) (range 2 x))))
+  (take n)))
+
+(fn [x]
+ (take x
+       (filter
+        #(= (inc (mod (apply * (range 1N %)) %)) %)
+        (iterate inc 2))))
+
+#(take %2 (remove (set (for [i % j (range (+ i i) 999 i)] j)) %)) (range 2 999)
