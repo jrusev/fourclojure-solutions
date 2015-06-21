@@ -537,3 +537,12 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 
 #(into {} (for [[k s] (group-by key (apply concat %&))]
             [k (reduce % (vals s))]))
+
+;; 70. Word Sorting
+;; Write a function that splits a sentence up into a sorted list of
+;; words. Capitalization should not affect sort order and punctuation
+;; should be ignored.
+#(->> (clojure.string/split % #"\W+") (sort-by clojure.string/lower-case))
+#(sort-by clojure.string/lower-case (re-seq #"\w+" %))
+(fn [s] (sort-by #(.toLowerCase %) (re-seq #"\w+" s)))
+#(sort-by (fn [x] (.toLowerCase x)) (.split % "\\W"))
