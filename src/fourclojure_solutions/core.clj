@@ -518,3 +518,22 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
         (iterate inc 2))))
 
 #(take %2 (remove (set (for [i % j (range (+ i i) 999 i)] j)) %)) (range 2 999)
+
+;; 69. Merge with a Function
+;; Write a function which takes a function f and a variable number of
+;; maps. Your function should return a map that consists of the rest
+;; of the maps conj-ed onto the first. If a key occurs in more than
+;; one map, the mapping(s) from the latter (left-to-right) should be
+;; combined with the mapping in the result by calling (f val-in-result
+;; val-in-latter)
+;; Special Restrictions: merge-with
+;;(= (__ * {:a 2, :b 3, :c 4} {:a 2} {:b 2} {:c 5}) {:a 4, :b 6, :c 20})
+(fn [f & maps]
+  (reduce
+   #(reduce (fn [m [k v]]
+              (assoc m k (if (m k) (f (m k) v) v)))
+            %1 %2)
+   maps))
+
+#(into {} (for [[k s] (group-by key (apply concat %&))]
+            [k (reduce % (vals s))]))
