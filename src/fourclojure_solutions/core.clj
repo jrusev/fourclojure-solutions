@@ -327,7 +327,7 @@ mapcat list
     (cons [])
     (sort-by count >)
      first))
-   
+
 (fn [xs]
   (->>
     (range (count xs) 1 -1)
@@ -586,7 +586,6 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
                (for [d [[[0 0] [1 1] [2 2]] [[2 0] [1 1] [0 2]]]]
                  (for [[x y] d] ((% x) y)))))
 
-
 (fn [b]
   (first (some #{[:x :x :x] [:o :o :o]}
                (concat b (apply map list b)
@@ -596,8 +595,7 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 (fn [[[a b c] [d e f] [g h i] :as x]]
     (some {[:x :x :x] :x [:o :o :o] :o}
           (list* [a d g] [b e h] [c f i] [a e i] [c e g] x)))
-        
-;; more
+
 (let [grps [[0 1 2] [3 4 5] [6 7 8] [0 3 6] [1 4 7] [2 5 8] [0 4 8] [2 4 6]]]
   (fn [game] (let [game (vec (apply concat game))]
                (first (some #{#{:x} #{:o}} (map #(set (map game %)) grps))))))
@@ -614,10 +612,10 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
           (concat t)
           (some (fn [r] (some #(when (= [% % %] r) %) [:x :o])))))
 
-(fn [b] 
+(fn [b]
   (some
       (comp first #{#{:o} #{:x}} set)
-      (concat b 
+      (concat b
         (map #(map nth b [% % %]) [0 1 2])
         (map #(map nth b %) [[0 1 2] [2 1 0]]))))
 
@@ -627,15 +625,15 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
     (if (seq (filter #(= % [:x :x :x]) won)) :x
       (if (seq (filter #(= % [:o :o :o]) won)) :o nil))))
 
-(fn [board] 
-  (ffirst 
-    (filter 
-      #(or (= % [:x :x :x]) (= % [:o :o :o])) 
-      (concat 
-        board 
-        (partition 3 (apply interleave board)) 
-        (map 
-          #(take-nth 4 (flatten %)) 
+(fn [board]
+  (ffirst
+    (filter
+      #(or (= % [:x :x :x]) (= % [:o :o :o]))
+      (concat
+        board
+        (partition 3 (apply interleave board))
+        (map
+          #(take-nth 4 (flatten %))
           [board (map reverse board)])))))
 
 (fn [D B] ( ->>
