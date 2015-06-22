@@ -546,3 +546,60 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 #(sort-by clojure.string/lower-case (re-seq #"\w+" %))
 (fn [s] (sort-by #(.toLowerCase %) (re-seq #"\w+" s)))
 #(sort-by (fn [x] (.toLowerCase x)) (.split % "\\W"))
+
+;; 73. Analyze a Tic-Tac-Toe Board
+;; A tic-tac-toe board is represented by a two dimensional vector. X
+;; is represented by :x, O is represented by :o, and empty is
+;; represented by :e. A player wins by placing three Xs or three Os in
+;; a horizontal, vertical, or diagonal row. Write a function which
+;; analyzes a tic-tac-toe board and returns :x if X has won, :o if O
+;; has won, and nil if neitherplayer has won.
+(fn [board]
+  (let [b (into [] (flatten board))
+        views [[0 1 2] [3 4 5] [6 7 8] [0 3 6] [1 4 7] [2 5 8] [0 4 8] [2 4 6]]
+        lines (map #(map b %) views)]
+    (if (some #(= [:x :x :x] %) lines) :x
+      (if (some #(= [:o :o :o] %) lines) :o))))
+
+(fn [board]
+  (letfn [(win [[[a b c] [d e f] [g h i]] p]
+            (or (= p a b c)
+              (= p d e f)
+              (= p g h i)
+              (= p a d g)
+              (= p b e h)
+              (= p c f i)
+              (= p a e i)
+              (= p c e g)))]
+    (cond
+      (win board :x) :x
+      (win board :o) :o
+      :else nil)))
+
+
+#(let [p (concat % (apply map list %)
+           [(map nth % (range)) (map nth (map reverse %) (range))])]
+  (first (some #{[:x :x :x] [:o :o :o]} p)))
+
+
+#(some {[:x :x :x] :x [:o :o :o] :o}
+       (concat % (apply map list %)
+               (for [d [[[0 0] [1 1] [2 2]] [[2 0] [1 1] [0 2]]]]
+                 (for [[x y] d] ((% x) y)))))
+
+
+(fn [b]
+  (first (some #{[:x :x :x] [:o :o :o]}
+               (concat b (apply map list b)
+                  (map #(map (fn [a i] (a i)) b %) [[0 1 2] [2 1 0]])))))
+
+
+(fn [b]
+  (first (some #{[:x :x :x] [:o :o :o]}
+               (concat b (apply map list b)
+                  (map #(map (fn [a i] (a i)) b %) [[0 1 2] [2 1 0]])))))
+
+
+(fn [[[a b c] [d e f] [g h i] :as x]]
+    (some {[:x :x :x] :x [:o :o :o] :o}
+          (list* [a d g] [b e h] [c f i] [a e i] [c e g] x)))
