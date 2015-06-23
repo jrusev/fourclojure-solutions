@@ -321,20 +321,33 @@ mapcat list
 
 (fn [coll]
   (->>
-    (range 2 (inc (count coll)))
-    (mapcat #(partition % 1 coll))
-    (filter #(apply < %))
-    (cons [])
-    (sort-by count >)
-     first))
+   (range 2 (inc (count coll)))
+   (mapcat #(partition % 1 coll))
+   (filter #(apply < %))
+   (cons [])
+   (sort-by count >)
+   first))
 
 (fn [xs]
   (->>
-    (range (count xs) 1 -1)
-    (mapcat #(partition % 1 xs))
-    (filter #(->> (apply sorted-set %) seq (= %)))
-    first vec))
+   (range (count xs) 1 -1)
+   (mapcat #(partition % 1 xs))
+   (filter #(->> (apply sorted-set %) seq (= %)))
+   first vec))
 
+
+(fn [t]
+  (apply max-key
+         #(or ({1 -1} (count %)) (count %))
+         (reductions
+          #(if (= (dec %2) (last %)) (conj % %2) [%2])
+          [] t)))
+
+(fn [v]
+  (or (first (filter
+              #(apply < %)
+              (mapcat #(partition % 1 v) (range (count v) 1 -1))))
+      []))
 
 ;; 54. Partition a Sequence
 ;; Write a function which returns a sequence of lists of x items each.
