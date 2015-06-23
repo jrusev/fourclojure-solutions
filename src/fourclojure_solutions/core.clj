@@ -619,12 +619,6 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
         (map #(map nth b [% % %]) [0 1 2])
         (map #(map nth b %) [[0 1 2] [2 1 0]]))))
 
-(fn checkboard [board]
-  (let [[[a11 a12 a13] [a21 a22 a23] [a31 a32 a33]] board
-        won (into board [[a11 a21 a31] [a12 a22 a32] [a13 a23 a33] [a11 a22 a33] [a31 a22 a13]])]
-    (if (seq (filter #(= % [:x :x :x]) won)) :x
-      (if (seq (filter #(= % [:o :o :o]) won)) :o nil))))
-
 (fn [board]
   (ffirst
     (filter
@@ -651,10 +645,4 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
                   (vec (flatten x))
                   '(0 1 2 3 4 5 6 7 8 0 3 6 1 4 7 2 5 8 0 4 8 2 4 6))))))
 
-(fn [board]
-    (->> (concat board
-                 (apply map vector board)
-                 (let [[[a _ _] [_ b _] [_ _ c]] board] [[a b c]])
-                 (let [[[_ _ a] [_ b _] [c _ _]] board] [[a b c]]))
-     (some #{[:x :x :x] [:o :o :o]})
-     first))
+
