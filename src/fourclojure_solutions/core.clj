@@ -600,3 +600,21 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
              (map (vec (flatten %))
                   [0 1 2 3 4 5 6 7 8 0 3 6 1 4 7 2 5 8 0 4 8 2 4 6])))
 
+;; 74. Filter Perfect Squares
+;; Given a string of comma separated integers, write a function which
+;; returns a new comma separated string that only contains the numbers
+;; which are perfect squares.
+(fn [s]
+  (->>
+   (read-string (str "[" s  "]"))
+   (filter (set (map #(* % %) (range 9))))
+   (clojure.string/join ",")))
+
+(fn [s]
+  (->> s
+    (re-seq #"[0-9]+")
+    (map #(Integer/parseInt %))
+    (filter #(zero? (mod (Math/sqrt %) 1)))
+    (interpose ",")
+    (apply str)))
+

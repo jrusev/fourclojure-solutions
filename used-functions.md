@@ -41,6 +41,7 @@ peek
 quot
 range
 re-seq
+read-string
 recur
 repeat
 rest
