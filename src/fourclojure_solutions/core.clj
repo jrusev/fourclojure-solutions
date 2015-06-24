@@ -618,3 +618,21 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
     (interpose ",")
     (apply str)))
 
+;; 75. Euler's Totient Function
+;; Two numbers are coprime if their greatest common divisor equals 1.
+;; Euler's totient function f(x) is defined as the number of positive
+;; integers less than x which are coprime to x. The special case f(1)
+;; equals 1. Write a function which calculates Euler's totient
+;; function.
+(fn [n]
+  (let [gcd #(if (zero? %2) % (recur %2 (mod % %2)))]
+    (count
+     (filter
+      #(= 1 (gcd % n))
+      (range n)))))
+
+(fn [n] (inc
+         (count
+          (filter
+           #(= 1 (.gcd (biginteger %) (biginteger n)))
+           (range 2 n)))))
