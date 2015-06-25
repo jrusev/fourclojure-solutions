@@ -16,7 +16,9 @@ even?
 first
 flatten
 fn
+fn?
 format
+frequencies
 get
 hash-map
 identity

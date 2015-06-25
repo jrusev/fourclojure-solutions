@@ -657,3 +657,11 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
         (set g)))
 
 #(->> % (group-by set) vals (filter next) (map set) set)
+
+;; 78. Reimplement Trampoline
+;; Reimplement the function described in "Intro to Trampoline".
+;; Special Restrictions: trampoline
+(fn t [x & xs]
+  (if (fn? x) (t (apply x xs)) x))
+
+#(loop [f (% %2)] (if (fn? f) (recur (f)) f))
