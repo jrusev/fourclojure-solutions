@@ -669,3 +669,32 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
   (if (fn? x) (t (apply x xs)) x))
 
 #(loop [f (% %2)] (if (fn? f) (recur (f)) f))
+
+;; 79. Triangle Minimal Path
+;; Write a function which calculates the sum of the minimal path
+;; through a triangle. The triangle is represented as a collection of
+;; vectors. The path should start at the top of the triangle and move
+;; to an adjacent number on the next row until the bottom of the
+;; triangle is reached.
+;;(= 7 (__ '([1]
+;;          [2 4]
+;;         [5 1 4]
+;;        [2 3 4 5]))) ; 1->2->1->3
+(fn f
+  ([xs] (f 0 xs))
+  ([p [x & xs]]
+   (if (empty? xs)
+     (x p)
+     (+ (x p) (min
+               (f p xs)
+               (f (inc p) xs))))))
+
+(fn f [[[a] & b]]
+  (+ a (if b (min (f (map rest b))
+                  (f (map butlast b))) 0)))
+
+(fn [t]
+  (first
+   (reduce
+    (fn [a s] (map + s (map #(apply min %) (partition 2 1 a))))
+    (reverse t))))
