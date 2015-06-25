@@ -555,6 +555,7 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 ;; Write a function that splits a sentence up into a sorted list of
 ;; words. Capitalization should not affect sort order and punctuation
 ;; should be ignored.
+;; (= (__  "Have a nice day.") ["a" "day" "Have" "nice"])
 #(->> (clojure.string/split % #"\W+") (sort-by clojure.string/lower-case))
 #(sort-by clojure.string/lower-case (re-seq #"\w+" %))
 (fn [s] (sort-by #(.toLowerCase %) (re-seq #"\w+" s)))
@@ -604,6 +605,7 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 ;; Given a string of comma separated integers, write a function which
 ;; returns a new comma separated string that only contains the numbers
 ;; which are perfect squares.
+;; (= (__ "4,5,6,7,8,9") "4,9")
 (fn [s]
   (->>
    (read-string (str "[" s  "]"))
@@ -624,6 +626,7 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 ;; integers less than x which are coprime to x. The special case f(1)
 ;; equals 1. Write a function which calculates Euler's totient
 ;; function.
+;; (= (__ 99) 60)
 (fn [n]
   (let [gcd #(if (zero? %2) % (recur %2 (mod % %2)))]
     (count
@@ -645,6 +648,7 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 ;; are anagrams of each other. Each sub-set should have at least two
 ;; words. Words without any anagrams should not be included in the
 ;; result.
+;; (= (__ ["meat" "mat" "team" "mate" "eat"]) #{#{"meat" "team" "mate"}})
 (fn [xs]
   (->> (group-by sort xs)
        (vals)
