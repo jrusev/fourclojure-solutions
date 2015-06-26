@@ -721,3 +721,70 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 (fn [x y] (set (filter #(x %) y)))
 #(set (filter % %2))
 (comp set keep)
+
+;; 82. Word Chains
+;; A word chain consists of a set of words ordered so that each word
+;; differs by only one letter from the words directly before and after
+;; it. The one letter difference can be either an insertion, a
+;; deletion, or a substitution. Here is an example word chain:
+;;
+;; cat -> cot -> coat -> oat -> hat -> hot -> hog -> dog
+;;
+;; Write a function which takes a sequence of words, and returns true
+;; if they can be arranged into one continous word chain, and false if
+;; they cannot.
+;; (= true (__ #{"hat" "coat" "dog" "cat" "oat" "cot" "hot" "hog"}))
+
+;; Try all paths with dfs to find one that contains all words
+(letfn [(chainable? [a, b]
+          (let [[x y] (sort-by count [a b])]
+            (if (zero? (- (count y) (count x)))
+              (= 1  (count (filter false? (map #(= % %2) x y))))
+              (some
+               #(= (seq x) (concat (take % y) (drop (inc %) y)))
+               (range (count y))))))
+        (graph [nodes]
+          (reduce (fn [m x]
+                    (assoc m x (filter #(chainable? x %) nodes))) {} nodes))
+        (chain? [start graph visited]
+          (or (= (count visited) (count graph))
+              (some #(chain? % graph (conj visited %))
+                    (remove visited (graph start)))))]
+  (fn [words]
+    (let [g (graph words)]
+      (or (some #(chain? % g #{%}) words)
+          false))))
+
+;; Using Levenshtein distance
+(letfn [(leven [[fa & ra :as a] [fb & rb :as b]]
+          (cond (nil? a) (count b)
+                (nil? b) (count a)
+                (= fa fb) (leven ra rb)
+                :else (+ 1
+                        (min (leven ra rb)
+                             (leven a rb)
+                             (leven ra b)))))
+        (rem-disj [ht e]
+          [(dissoc ht e) (ht e)])
+        (walkable? [[ht elts]]
+          (if (empty? ht)
+            true
+            (let [walks (for [n-e elts :when (ht n-e)]
+                          (walkable? (rem-disj ht n-e)))]
+              (some true? walks))))]
+  (fn [st]
+    (let [ht (apply merge-with concat
+                (for [a st, b st :when (= 1 (leven a b))] {a [b]}))]
+      (or (some #(walkable? (rem-disj ht %)) st)
+          false))))
+
+;; psk810's solution (same as chouser's but more readable)
+(fn [s]
+  (letfn [(ch? [s1 s2]
+            (loop [[a & b :as c] (seq s1) [d & e :as g] (seq s2)]
+              (if (= a d) (recur b e)
+                  (or (= b e) (= b g) (= c e)))))
+          (t [e s] (or
+                    (empty? s)
+                    (some #(t % (disj s %)) (filter #(ch? e %) s))))]
+    (or (some #(t % (disj s %)) s) false)))
