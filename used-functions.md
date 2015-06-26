@@ -77,6 +77,7 @@ fnil
 group-by
 iterate
 juxt
+keep
 map
 mapcat
 memoize

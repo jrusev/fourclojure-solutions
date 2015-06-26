@@ -712,3 +712,12 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 
 #(= % (apply + (for [i (range 1 %) :when (= 0 (mod % i))] i)))
 #(= % (reduce (fn [s k] ({0 (+ s k)} (rem % k) s)) (range %)))
+
+;; 81. Set Intersection
+;; Write a function which returns the intersection of two sets. The
+;; intersection is the sub-set of items that each set has in common.
+;; Special Restrictions: intersection
+;; (= (__ #{0 1 2 3} #{2 3 4 5}) #{2 3})
+(fn [x y] (set (filter #(x %) y)))
+#(set (filter % %2))
+(comp set keep)
