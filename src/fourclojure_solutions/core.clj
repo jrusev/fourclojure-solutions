@@ -698,3 +698,17 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
    (reduce
     (fn [a s] (map + s (map #(apply min %) (partition 2 1 a))))
     (reverse t))))
+
+;; 80. Perfect Numbers
+;; A number is "perfect" if the sum of its divisors equal the number
+;; itself. 6 is a perfect number because 1+2+3=6. Write a function
+;; which returns true for perfect numbers and false otherwise.
+;; (= (__ 8128)
+(fn [n]
+  (= n
+     (reduce
+      #(if (zero? (mod n %2)) (+ % %2) %)
+      (range n))))
+
+#(= % (apply + (for [i (range 1 %) :when (= 0 (mod % i))] i)))
+#(= % (reduce (fn [s k] ({0 (+ s k)} (rem % k) s)) (range %)))
