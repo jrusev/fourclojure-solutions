@@ -796,3 +796,28 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 ;; return false.
 #(= 2 (count (set %&)))
 not=
+
+;; 84. Transitive Closure
+;; Write a function which generates the transitive closure of a binary
+;; relation. The relation will be represented as a set of 2 item
+;; vectors.
+;; (= (__ #{[8 4] [9 3] [4 2] [27 9]})
+;;    #{[4 2] [8 4] [8 2] [9 3] [27 9] [27 3]})
+(fn [s]
+  (let [graph (apply merge-with into (for [[k v] s] {k [v]}))
+        tree (fn f [root visited]
+               (concat
+                (graph root)
+                (mapcat #(f % (conj visited %))
+                        (remove visited (graph root)))))]
+    (set (mapcat
+          (fn [root] (map #(vector root %) (tree root #{})))
+          (keys graph)))))
+
+;; adereth's solution: add edges until no more edges can be added
+#(loop [s %]
+   (let [n (into s
+                 (for [[a b] s [c d] s
+                       :when (= b c)]
+                   [a d]))]
+      (if (= n s) n (recur n))))
