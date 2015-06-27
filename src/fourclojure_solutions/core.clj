@@ -788,3 +788,11 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
                     (empty? s)
                     (some #(t % (disj s %)) (filter #(ch? e %) s))))]
     (or (some #(t % (disj s %)) s) false)))
+ 
+;; 83. A Half-Truth
+;; Write a function which takes a variable number of booleans. Your
+;; function should return true if some of the parameters are true, but
+;; not all of the parameters are true. Otherwise your function should
+;; return false.
+#(= 2 (count (set %&)))
+not=
