@@ -814,6 +814,15 @@ not=
           (fn [root] (map #(vector root %) (tree root #{})))
           (keys graph)))))
 
+;; dzholev's solution
+(defn tc [s]
+  (let [tr (group-by first s)
+        d (fn [[a b]] (map #(vector a (second %)) (tr b)))
+        f (fn f [e]
+            (let [a (d e)]
+              (concat [e] a (mapcat f a))))]
+    (set (mapcat f s))))
+
 ;; adereth's solution: add edges until no more edges can be added
 #(loop [s %]
    (let [n (into s
@@ -822,17 +831,17 @@ not=
                    [a d]))]
       (if (= n s) n (recur n))))
 
+;; youz's solution
+(fn f [s]
+  (#(if (= % s) s (f %))
+   (set (for [[a b] s [c d] s]
+          [a (if (= b c) d b)]))))
+
 ;; 85. Power Set
 ;; Write a function which generates the power set of a given set. The
 ;; power set of a set x is the set of all subsets of x, including the
 ;; empty set and x itself.
 ;; (= (__ #{1 2 3})
 ;;    #{#{} #{1} #{2} #{3} #{1 2} #{1 3} #{2 3} #{1 2 3}})
-(fn [s]
-  (reduce
-   (fn [ps e]
-     (println ps (map #(clojure.set/union % #{e}) ps))
-     (clojure.set/union
-      ps
-      (map #(clojure.set/union % #{e}) ps)))
-   #{#{}} s))
+reduce (fn [s x] (into s (map #(conj % x) s))) #{#{}}
+
