@@ -821,3 +821,18 @@ not=
                        :when (= b c)]
                    [a d]))]
       (if (= n s) n (recur n))))
+
+;; 85. Power Set
+;; Write a function which generates the power set of a given set. The
+;; power set of a set x is the set of all subsets of x, including the
+;; empty set and x itself.
+;; (= (__ #{1 2 3})
+;;    #{#{} #{1} #{2} #{3} #{1 2} #{1 3} #{2 3} #{1 2 3}})
+(fn [s]
+  (reduce
+   (fn [ps e]
+     (println ps (map #(clojure.set/union % #{e}) ps))
+     (clojure.set/union
+      ps
+      (map #(clojure.set/union % #{e}) ps)))
+   #{#{}} s))
