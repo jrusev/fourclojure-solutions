@@ -845,3 +845,19 @@ not=
 ;;    #{#{} #{1} #{2} #{3} #{1 2} #{1 3} #{2 3} #{1 2 3}})
 reduce (fn [s x] (into s (map #(conj % x) s))) #{#{}}
 
+;; 86. Happy numbers
+;; Happy numbers are positive integers that follow a particular
+;; formula: take each individual digit, square it, and then sum the
+;; squares to get a new number. Repeat with the new number and
+;; eventually, you might get to a number whose squared sum is 1. This
+;; is a happy number. An unhappy number (or sad number) is one that
+;; loops endlessly. Write a function that determines if a number is
+;; happy or not.
+(fn happy?
+  ([n] (happy? n #{}))
+  ([n mem]
+   (let [digits (map (comp read-string str) (seq (str n)))
+         sum (apply + (map #(* % %) digits))]
+     (or (= sum 1)
+         (if (mem sum) false (happy? sum (conj mem sum)))))))
+
