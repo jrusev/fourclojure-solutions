@@ -885,3 +885,13 @@ reduce (fn [s x] (into s (map #(conj % x) s))) #{#{}}
           (reduce (fn [a c] (+ a (* (- (int c) 48) (- (int c) 48))))
                   0 (str %)))))
 
+;; 88. Symmetric Difference
+;; Write a function which returns the symmetric difference of two
+;; sets. The symmetric difference is the set of items belonging to one
+;; but not both of the two sets.
+#(clojure.set/difference (clojure.set/union % %2) (clojure.set/intersection % %2))
+#(let [d clojure.set/difference] (into  (d % %2) (d %2 %)))
+#(set (concat (apply disj %1 %2) (apply disj %2 %1)))
+#(into (set (remove %2 %)) (remove % %2))
+reduce #((if (% %2) disj conj) % %2)
+#(set (mapcat remove [% %2] [%2 %]))
