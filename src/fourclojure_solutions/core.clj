@@ -895,3 +895,80 @@ reduce (fn [s x] (into s (map #(conj % x) s))) #{#{}}
 #(into (set (remove %2 %)) (remove % %2))
 reduce #((if (% %2) disj conj) % %2)
 #(set (mapcat remove [% %2] [%2 %]))
+
+;; 89. Graph Tour
+;; Starting with a graph you must write a function that returns true if it is
+;; possible to make a tour of the graph in which every edge is visited exactly
+;; once. The graph is represented by a vector of tuples, where each tuple
+;; represents a single edge.
+;; The rules are:
+;; - You can start at any node.
+;; - You must visit each edge exactly once.
+;; - All edges are undirected.
+(letfn [(graph [edges] 
+          (apply merge-with into (for [[k v] edges] (conj {k [v]} {v [k]}))))
+        (connected?
+          ([graph]
+           (let [r (first (keys graph))]
+             (boolean (connected? r graph #{r}))))
+          ([start graph visited]
+           (or (= (count visited) (count graph))
+               (some #(connected? % graph (conj visited %))
+                     (remove visited (graph start))))))
+        (odd-nodes [graph]
+          (->> graph vals (map count) (filter odd?)))]
+  (fn [edges]
+    (let [g (graph edges)
+          odd (count (odd-nodes g))]
+      (and (connected? g)
+           (or (= 0 odd) (= 2 odd))))))
+
+;; lackita's solution
+(fn [edges]
+  (let [graph (group-by first (mapcat (fn [e] [e (vec (reverse e))])
+                                      edges))
+        odd-nodes (count (filter odd? (map count (vals graph))))
+        connected ((fn traverse [v]
+                     (let [new-v (into v (map last (mapcat graph v)))]
+                       (if (= new-v v)
+                         (= v (set (keys graph)))
+                         (traverse new-v))))
+                   #{(first (keys graph))})]
+    (and connected
+         (or (= odd-nodes 0)
+             (= odd-nodes 2)))))
+
+;; chouser's solution
+(fn [e]
+  (if (#{0 2} (count (filter odd? (vals (frequencies (mapcat seq e))))))
+    (not (next (reduce
+                (fn [g e]
+                  (let [[a b] (map
+                               (fn [n] (or
+                                        (some #(if (% n) %) g)
+                                        #{n}))
+                               e)]
+                    (conj (disj g a b) (into a b))))
+                #{}
+                e)))
+    false))
+
+;; maximental's solution
+(fn [g]
+  (and
+   (->> g (mapcat seq) frequencies vals (filter odd?) count #{0 2} boolean)
+   ((fn f [e]
+      (#(if (= e %) (= % (set g)) (f %))
+       (reduce (fn [a b] (into a (filter #(some (set b) %) (set g))))
+               #{}
+               e)))
+    #{(first g)})))
+
+;; youz's solution
+(fn [[h & r]]
+  ((fn f [a r]
+     (or (empty? r)
+         (boolean
+          (some #(f (nth (remove #{a} %) 0) (remove #{%} r))
+                (filter #(some #{a} %) r)))))
+   (h 1) r))
