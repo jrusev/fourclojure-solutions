@@ -977,3 +977,57 @@ reduce #((if (% %2) disj conj) % %2)
 ;; Write a function which calculates the Cartesian product of two sets.
 #(set (for [x % y %2] [x y]))
 
+;; 91. Graph Connectivity
+;; Given a graph, determine whether the graph is connected. A
+;; connected graph is such that a path exists between any two given
+;; nodes.
+;; -Your function must return true if the graph is connected and false otherwise.
+;; -You will be given a set of tuples representing the edges of a
+;;  graph. Each member of a tuple being a vertex/node in the graph.
+;; -Each edge is undirected (can be traversed either direction).
+(fn [edges]
+  (let [graph (group-by first (mapcat (fn [e] [e (vec (reverse e))])
+                                      edges))]
+    ((fn traverse [v]
+       (let [new-v (into v (map last (mapcat graph v)))]
+         (if (= new-v v)
+           (= v (set (keys graph)))
+           (traverse new-v))))
+     #{(first (keys graph))})))
+
+;; youz's solution
+(fn [o]
+  (let [[h & r] (seq o)]
+    ((fn f [c r]
+       (or (empty? r)
+           (let [n (mapcat #(filter (fn [p] (some (set %) p)) r) c)]
+             (if (empty? n) false
+                 (f (reduce conj c n)
+                    (remove (set n) r))))))
+     #{h} r)))
+
+;; jafingerhut's solution
+(fn [edges]
+  (= 1 (count (reduce (fn [c [u v]]
+                        (let [s (or (first (filter #(% u) c)) #{u})
+                              t (or (first (filter #(% v) c)) #{v})]
+                          (conj (disj c s t) (into s t))))
+                      #{} edges))))
+
+;; dlee's solution
+(fn [m] (loop [xs (group-by first m) k [(key (first xs))]]
+          (if (empty? k)
+            (empty? xs)
+            (recur
+             (apply dissoc xs k)
+             (set (map second (mapcat xs k)))))))
+
+;; maximental's solution
+(fn [g]
+  ((fn f [e]
+     (#(if (= e %) (= % g) (f %))
+      (reduce (fn [a b] (into a (filter #(some (set b) %) g)))
+              #{}
+              e)))
+   #{(first g)}))
+
