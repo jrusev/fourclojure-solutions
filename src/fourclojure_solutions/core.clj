@@ -972,3 +972,8 @@ reduce #((if (% %2) disj conj) % %2)
           (some #(f (nth (remove #{a} %) 0) (remove #{%} r))
                 (filter #(some #{a} %) r)))))
    (h 1) r))
+
+;; 90. Cartesian Product
+;; Write a function which calculates the Cartesian product of two sets.
+#(set (for [x % y %2] [x y]))
+
