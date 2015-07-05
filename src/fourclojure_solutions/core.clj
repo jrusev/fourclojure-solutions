@@ -985,7 +985,14 @@ reduce #((if (% %2) disj conj) % %2)
 ;; -You will be given a set of tuples representing the edges of a
 ;;  graph. Each member of a tuple being a vertex/node in the graph.
 ;; -Each edge is undirected (can be traversed either direction).
-(fn [edges]
+
+;; To time the functions build a test graph with:
+(defn graph [n] (for [x (range n) y (range n) :when (< (rand) 0.1)] [x y]))
+(def g (graph 100)) ;; graph with 100 nodes (~1000 edges)
+(time (dotimes [_ 10] (conn? g))) ;; 10 times
+
+;; lackita's solution (34 msecs)
+(defn conn? [edges]
   (let [graph (group-by first (mapcat (fn [e] [e (vec (reverse e))])
                                       edges))]
     ((fn traverse [v]
@@ -995,8 +1002,8 @@ reduce #((if (% %2) disj conj) % %2)
            (traverse new-v))))
      #{(first (keys graph))})))
 
-;; youz's solution
-(fn [o]
+;; youz's solution (1800 msecs)
+(defn conn? [o]
   (let [[h & r] (seq o)]
     ((fn f [c r]
        (or (empty? r)
@@ -1006,24 +1013,24 @@ reduce #((if (% %2) disj conj) % %2)
                     (remove (set n) r))))))
      #{h} r)))
 
-;; jafingerhut's solution
-(fn [edges]
+;; jafingerhut's solution (210 msecs)
+(defn conn? [edges]
   (= 1 (count (reduce (fn [c [u v]]
                         (let [s (or (first (filter #(% u) c)) #{u})
                               t (or (first (filter #(% v) c)) #{v})]
                           (conj (disj c s t) (into s t))))
                       #{} edges))))
 
-;; dlee's solution
-(fn [m] (loop [xs (group-by first m) k [(key (first xs))]]
+;; dlee's solution (10 msecs)
+(defn conn? [m] (loop [xs (group-by first m) k [(key (first xs))]]
           (if (empty? k)
             (empty? xs)
             (recur
              (apply dissoc xs k)
              (set (map second (mapcat xs k)))))))
 
-;; maximental's solution
-(fn [g]
+;; maximental's solution (9500 msecs)
+(defn conn? [g]
   ((fn f [e]
      (#(if (= e %) (= % g) (f %))
       (reduce (fn [a b] (into a (filter #(some (set b) %) g)))
