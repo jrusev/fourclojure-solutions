@@ -1038,3 +1038,31 @@ reduce #((if (% %2) disj conj) % %2)
               e)))
    #{(first g)}))
 
+;; 92. Read Roman numerals
+;; Roman numerals are easy to recognize, but not everyone knows all
+;; the rules necessary to work with them. Write a function to parse a
+;; Roman-numeral string and return the number it represents.
+;; You can assume that the input will be well-formed, in upper-case,
+;; and follow the subtractive principle. You don't need to handle any
+;; numbers greater than MMMCMXCIX (3999), the largest number
+;; representable with ordinary letters.
+(fn [x]
+  (loop [x x sum 0]
+    (let [[r a] (some
+                 #(if (.startsWith x (% 0)) %)
+                 (map vector
+                      ["M" "CM" "D" "CD" "C" "XC" "L" "XL" "X" "IX" "V" "IV" "I"]
+                      [1000 900 500 400  100  90   50  40  10    9   5   4    1]))]
+      (if (empty? x) sum
+          (recur (subs x (count r)) (+ sum a))))))
+
+;; dzholev's solution
+#(apply + (map { "M" 1000 "D" 500 "C" 100 "L" 50 "X" 10 "V" 5 "I" 1
+                "CM" 900 "CD" 400 "XC" 90 "XL" 40 "IX" 9 "IV" 4}
+              (re-seq #"C[MD]|X[CL]|I[XV]|." %)))
+
+;; nikelandjelo's solution
+#(->> (map {\C 100 \D 500 \I 1 \L 50 \M 1000 \V 5 \X 10} %)
+      (partition 2 1 [0])
+      (map (fn [[a b]] (if (< a b) (- a) a)))
+      (apply +))
