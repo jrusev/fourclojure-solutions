@@ -1066,3 +1066,12 @@ reduce #((if (% %2) disj conj) % %2)
       (partition 2 1 [0])
       (map (fn [[a b]] (if (< a b) (- a) a)))
       (apply +))
+
+;; 93. Partially Flatten a Sequence
+;; Write a function which flattens any nested combination of
+;; sequential things (lists, vectors, etc.), but maintains the lowest
+;; level sequential items. The result should be a sequence of
+;; sequences with only one level of nesting.
+;; (= (__ [[[[:a :b]]] [[:c :d]] [:e :f]])
+;;    [[:a :b] [:c :d] [:e :f]])
+(fn f [x] (if (some coll? x) (mapcat f x) [x]))
