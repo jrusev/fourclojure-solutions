@@ -1075,3 +1075,92 @@ reduce #((if (% %2) disj conj) % %2)
 ;; (= (__ [[[[:a :b]]] [[:c :d]] [:e :f]])
 ;;    [[:a :b] [:c :d] [:e :f]])
 (fn f [x] (if (some coll? x) (mapcat f x) [x]))
+
+;; 94. Game of Life
+;; The game of life is a cellular automaton devised by mathematician John Conway.
+;; The 'board' consists of both live (#) and dead ( ) cells. Each cell interacts
+;; with its eight neighbours (horizontal, vertical, diagonal), and its next state
+;; is dependent on the following rules:
+;; 1) Any live cell with fewer than two live neighbours dies, as if caused by
+;; under-population.
+;; 2) Any live cell with two or three live neighbours lives on to the next
+;; generation.
+;; 3) Any live cell with more than three live neighbours dies, as if by
+;; overcrowding.
+;; 4) Any dead cell with exactly three live neighbours becomes a live cell, as
+;; if by reproduction.
+;; Write a function that accepts a board, and returns a board representing the
+;; next generation of cells.
+(fn [b]
+  (let [adj [[-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1]]
+        update (fn [cell c] (case cell
+                              \# (cond
+                                  (< c 2) \ 
+                                  (<= 2 c 3) \#
+                                  :else \ )
+                              (if (= 3 c) \# cell)))]
+    (for [x (range (count b))]
+      (apply str (for [y (range (count (b 0)))]
+                   (let [cell (-> b (get x) (get y))
+                         neighbors (for [[dx dy] adj]
+                                     (-> b (get (+ x dx)) (get (+ y dy))))
+                         c (count (filter #(= \# %) neighbors))]
+                     (update cell c)))))))
+
+;; katox's solution
+(fn [b]
+  (let [size (count b)
+        alive? (fn [x y] (= (get-in b [x y]) \#))
+        count-alive (fn [x y]
+                      (reduce #(if %2 (inc %) %) 0
+                              (for [i [-1 0 1]
+                                    j [-1 0 1]
+                                    :when (not= i j 0)]
+                                (alive? (+ x i) (+ y j)))))
+        update (fn [x y n] (if (or (= n 3) (and (= n 2) (alive? x y))) \# \ ))]
+    (for [x (range size)]
+      (apply str (for [y (range size)]
+                   (update x y (count-alive x y)))))))
+
+;; maximental's solution
+(fn [b]
+  (let [g #(nth (nth b % []) %2 \ )
+        h #(reduce (fn [n [x y]] (+ n ({\  0 \# 1} (g (+ % x) (+ %2 y)))))
+                   0
+                   [[-1 -1] [-1 0] [-1 1]
+                    [ 0 -1]        [ 0 1]
+                    [ 1 -1] [ 1 0] [ 1 1]])]
+    (reduce (fn [u i]
+              (conj u (reduce (fn [v j]
+                                (str v ({2 (g i j) 3 \#} (h i j) " ")))
+                              ""
+                              (range (count (peek b))))))
+            []
+            (range (count b)))))
+
+;; mouse's solution
+(fn [b]
+  (map (partial apply str)
+       (map-indexed
+        (fn [r l] (map-indexed
+                   (fn [c e]
+                     ({3 \# 2 e}
+                      (apply + (map
+                                (fn [[i j]] ({\# 1} (get-in b [(+ i r) (+ j c)] \ ) 0))
+                                [[-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1]]))
+                      \ ))
+                   l))
+        b)))
+
+;; chouser's solution
+#(let [r (range (count %))
+       v [-1 0 1]
+       a \#]
+   (for [y r]
+     (apply str (for [x r
+                      c [(count (for [j v, k v
+                                      :when (= a (get-in % [(+ y j) (+ x k)]))]
+                                  1))]]
+                  (if (or (= c 3) (and (= c 4) (= a (get-in % [y x]))))
+                    a
+                    \ )))))
