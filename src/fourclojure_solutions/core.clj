@@ -1164,3 +1164,16 @@ reduce #((if (% %2) disj conj) % %2)
                   (if (or (= c 3) (and (= c 4) (= a (get-in % [y x]))))
                     a
                     \ )))))
+
+;; 95. To Tree, or not to Tree
+;; Write a predicate which checks if a given sequence represents a binary tree.
+;; Each node in the tree must have a value, a left child, and a rightchild.
+(fn f [t] (if (coll? t)
+            (let [[_ a b] t] (and (= 3 (count t)) (f a) (f b)))
+            (nil? t)))
+
+(fn f [t]
+  (or (nil? t)
+      (and (coll? t)
+           (= 3 (count t))
+           (every? f (next t)))))
