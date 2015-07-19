@@ -1177,3 +1177,33 @@ reduce #((if (% %2) disj conj) % %2)
       (and (coll? t)
            (= 3 (count t))
            (every? f (next t)))))
+
+;; 96. Beauty is Symmetry
+;; Let us define a binary tree as "symmetric" if the left half of the
+;; tree is the mirror image of the right half of the tree. Write a
+;; predicate to determine whether or not a given binary tree is
+;; symmetric. (see To Tree, or not to Tree for a reminder on the tree
+;; representation we're using).
+(fn f [[_ l r]]
+  (letfn [(fl [t]
+            (if (nil? t) [t]
+                (let [[n l r] t]
+                  (concat [n] (fl l) (fl r)))))
+          (fr [t]
+            (if (nil? t) [t]
+                (let [[n l r] t]
+                  (concat [n] (fr r) (fr l)))))]
+    (= (fl l) (fr r))))
+
+(fn f [[_ l r]]
+  ((fn g [l r]
+     (or (= nil l r)
+         (let [[a b c] l
+               [x y z] r]
+           (and (= a x)
+                (g b z)
+                (g c y)))))
+   l r))
+
+;; maximental's solution
+#(= % ((fn m [[v l r]] (if v [v (m r) (m l)])) %))
