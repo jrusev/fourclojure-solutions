@@ -1242,3 +1242,10 @@ reduce #((if (% %2) disj conj) % %2)
 (fn [f d]
   (set (map set (vals (group-by f d)))))
 
+;; 99. Product Digits
+;; Write a function which multiplies two numbers and returns the
+;; result as a sequence of its digits.
+#(map (zipmap "0123456789" (range 10)) (str (apply * %&)))
+(fn [x y] (map #(- (int %) 48) (str (* x y))))
+#(map (comp read-string str) (str (* % %2)))
+#(for [c (str (* % %2))] (- (int c) 48))
