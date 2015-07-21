@@ -1249,3 +1249,17 @@ reduce #((if (% %2) disj conj) % %2)
 (fn [x y] (map #(- (int %) 48) (str (* x y))))
 #(map (comp read-string str) (str (* % %2)))
 #(for [c (str (* % %2))] (- (int c) 48))
+
+;; 100 Least Common Multiple
+;; Write a function which calculates the least common multiple. Your
+;; function should accept a variable number of positive integers or
+;; ratios.
+(fn [& nums]
+  (let [gcd #(if (zero? %2) % (recur %2 (mod % %2)))
+        lcm #(/ (* % %2) (gcd % %2))]
+    (reduce lcm nums)))
+
+;; mouse's solution
+(fn [n & r]
+    (first (filter (fn [nm] (every? #(= 0 (rem nm %)) r))
+                   (iterate #(+ n %) n) )))
