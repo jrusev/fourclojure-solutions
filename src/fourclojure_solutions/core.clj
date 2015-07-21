@@ -1267,3 +1267,55 @@ reduce #((if (% %2) disj conj) % %2)
 (fn [n & r]
     (first (filter (fn [nm] (every? #(= 0 (rem nm %)) r))
                    (iterate #(+ n %) n) )))
+
+;; 101. Levenshtein Distance
+;; Given two sequences x and y, calculate the Levenshtein distance of
+;; x and y, i. e. the minimum number of edits needed to transform x
+;; into y. The allowed edits are:
+;; - insert a single item
+;; - delete a single item
+;; - replace a single item with another item
+;; (= (__ "kitten" "sitting") 3)
+(fn f [[fa & ra :as a] [fb & rb :as b]]
+  (cond (nil? a) (count b)
+        (nil? b) (count a)
+        (= fa fb) (f ra rb)
+        :else (+ 1
+                 (min (f ra rb)
+                      (f a rb)
+                      (f ra b)))))
+
+(fn [a b]
+  (let [f (fn [m [fa & ra :as a] [fb & rb :as b]]
+            (cond (nil? a) (count b)
+                  (nil? b) (count a)
+                  (= fa fb) (m m ra rb)
+                  :else (+ 1
+                           (min (m m ra rb)
+                                (m m a rb)
+                                (m m ra b)))))]
+    (f (memoize f) a b)))
+
+;; youz's solution
+(fn [x y]
+  (last
+   (reduce #(reduce (fn [c i]
+                      (conj c (+ 1 (min (nth % (+ i 1))
+                                        (nth c i)
+                                        (- (nth % i)
+                                           ({(nth x i) 1} (nth y %2) 0))))))
+                    [(+ %2 1)]
+                    (range (count x)))
+           (range (+ 1 (count x)))
+           (range (count y)))))
+
+;; xenocard's solution
+(fn [x y]
+  (last
+   (reduce (fn [[i & r] y]
+             (map first (reductions
+                         (fn [[d s] [i x]]
+                           [(min (inc d) (inc i) (if (= x y) s (inc s))) i])
+                         [(inc i) i] (map list r x))))
+           (range (inc (count x)))
+           y)))
