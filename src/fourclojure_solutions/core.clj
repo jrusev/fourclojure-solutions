@@ -1168,6 +1168,7 @@ reduce #((if (% %2) disj conj) % %2)
 ;; 95. To Tree, or not to Tree
 ;; Write a predicate which checks if a given sequence represents a binary tree.
 ;; Each node in the tree must have a value, a left child, and a rightchild.
+;; (= (__ [1 nil [2 [3 nil nil] [4 nil nil]]]) true)
 (fn f [t] (if (coll? t)
             (let [[_ a b] t] (and (= 3 (count t)) (f a) (f b)))
             (nil? t)))
@@ -1182,8 +1183,9 @@ reduce #((if (% %2) disj conj) % %2)
 ;; Let us define a binary tree as "symmetric" if the left half of the
 ;; tree is the mirror image of the right half of the tree. Write a
 ;; predicate to determine whether or not a given binary tree is
-;; symmetric. (see To Tree, or not to Tree for a reminder on the tree
+;; symmetric. (see 'To Tree, or not to Tree' for a reminder on the tree
 ;; representation we're using).
+;; (= (__ '(:a (:b nil nil) (:b nil nil))) true)
 (fn f [[_ l r]]
   (letfn [(fl [t]
             (if (nil? t) [t]
@@ -1245,6 +1247,7 @@ reduce #((if (% %2) disj conj) % %2)
 ;; 99. Product Digits
 ;; Write a function which multiplies two numbers and returns the
 ;; result as a sequence of its digits.
+;; (= (__ 999 99) [9 8 9 0 1])
 #(map (zipmap "0123456789" (range 10)) (str (apply * %&)))
 (fn [x y] (map #(- (int %) 48) (str (* x y))))
 #(map (comp read-string str) (str (* % %2)))
@@ -1254,6 +1257,7 @@ reduce #((if (% %2) disj conj) % %2)
 ;; Write a function which calculates the least common multiple. Your
 ;; function should accept a variable number of positive integers or
 ;; ratios.
+;; (== (__ 7 5/7 2 3/5) 210)
 (fn [& nums]
   (let [gcd #(if (zero? %2) % (recur %2 (mod % %2)))
         lcm #(/ (* % %2) (gcd % %2))]
