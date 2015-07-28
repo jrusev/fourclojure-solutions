@@ -1319,3 +1319,23 @@ reduce #((if (% %2) disj conj) % %2)
                          [(inc i) i] (map list r x))))
            (range (inc (count x)))
            y)))
+
+;; 102. intoCamelCase
+;; When working with java, you often need to create an object with
+;; fieldsLikeThis, but you'd rather work with a hashmap that has
+;; :keys-like-this until it's time to convert. Write a function which
+;; takes lower-case hyphen-separated strings and converts them to
+;; camel-case strings.
+;; (= (__ "multi-word-key") "multiWordKey")
+#(let [[h & t] (clojure.string/split % #"-")]
+   (apply str h (map clojure.string/capitalize t)))
+
+;; maximental's solution
+#(reduce (fn [a [c & s]] (apply str `(~a ~(Character/toUpperCase c) ~@s)))
+         (.split % "-"))
+
+;; bradediger's solution
+#(clojure.string/replace % #"-(\w)" (fn [[_ l]] (.toUpperCase l)))
+
+;; chouser's solution
+#(clojure.string/replace % #"-." (fn [[_ x]] (format "%S" x)))
