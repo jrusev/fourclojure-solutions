@@ -1339,3 +1339,24 @@ reduce #((if (% %2) disj conj) % %2)
 
 ;; chouser's solution
 #(clojure.string/replace % #"-." (fn [[_ x]] (format "%S" x)))
+
+;; 103. Generating k-combinations
+;; Given a sequence S consisting of n elements, generate all k-combinations of S,
+;; i. e. generate all possible sets consisting of k distinct elements taken from S.
+;; (= (__ 2 #{0 1 2}) #{#{0 1} #{0 2} #{1 2}})
+;; time with => (time (k-comb 10 (set (range 20))))
+;; maximental's solution (20,000 ms)
+(fn [k s]
+  (loop [k k a #{#{}}]
+    (if (> k 0)
+      (recur (dec k) (set (for [x a y s :when (not (x y))] (conj x y))))
+      a)))
+
+;; jafingerhut's solution (310 ms), similar to vlisch's (240ms)
+(fn k-comb [k s]
+  (cond (> k (count s)) #{}
+        (= k 0) #{#{}}
+        :else (let [[x & xs] (seq s)]
+                (into (k-comb k xs)
+                      (map #(conj % x) (k-comb (dec k) xs))))))
+
