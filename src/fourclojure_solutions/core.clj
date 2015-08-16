@@ -1046,6 +1046,7 @@ reduce #((if (% %2) disj conj) % %2)
 ;; and follow the subtractive principle. You don't need to handle any
 ;; numbers greater than MMMCMXCIX (3999), the largest number
 ;; representable with ordinary letters.
+;; (= 48 (__ "XLVIII"))
 (fn [x]
   (loop [x x sum 0]
     (let [[r a] (some
