@@ -1361,3 +1361,35 @@ reduce #((if (% %2) disj conj) % %2)
                 (into (k-comb k xs)
                       (map #(conj % x) (k-comb (dec k) xs))))))
 
+;; 104. Write Roman Numerals
+;; This is the inverse of Problem 92, but much easier. Given an integer
+;; smaller than 4000, return the corresponding roman numeral in uppercase,
+;; adhering to the subtractive principle.
+;; (= "XLVIII" (__ 48))
+(defn to-roman [n]
+  (let [romans (map vector
+                    ["M" "CM" "D" "CD" "C" "XC" "L" "XL" "X" "IX" "V" "IV" "I"]
+                    [1000 900 500 400  100  90   50  40  10    9   5   4    1])
+        choose (fn [n] (first (filter #(<= (% 1) n) romans)))]
+    (loop [n n r ""]
+      (if (zero? n) r
+          (let [[rom num] (choose n)]
+            (recur (- n num) (str r rom)))))))
+
+;; hypirion's solution
+(let [loch {1 "I",  5 "V",  10 "X",  50 "L",  100 "C",  500 "D",  1000 "M"
+            4 "IV", 9 "IX", 40 "XL", 90 "XC", 400 "CD", 900 "CM"}]
+  (fn roman [n]
+    (let [m (apply max (filter #(<= % n) (keys loch)))]
+      (if (= m n)
+        (loch m)
+        (str (loch m) (roman (- n m)))))))
+
+;; chouser's solution
+(fn f [[n & a] [s & b] o i]
+  (if n
+    (f a b (into o (repeat (int (/ i n)) s)) (rem i n))
+    (apply str o)))
+[1000 900 500 400 100 90 50 40 10  9 5  4 1]
+'[  M  CM   D  CD   C XC  L XL  X IX V IV I]
+[]
