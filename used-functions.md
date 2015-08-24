@@ -25,6 +25,7 @@ identity
 if-let
 ifn?
 interleave
+interpose
 into
 last
 lazy-cat
@@ -56,6 +57,7 @@ set
 sort
 sorted-set
 split-at
+split-with
 str
 take
 take-last

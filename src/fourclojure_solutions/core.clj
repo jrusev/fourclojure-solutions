@@ -1393,3 +1393,33 @@ reduce #((if (% %2) disj conj) % %2)
 [1000 900 500 400 100 90 50 40 10  9 5  4 1]
 '[  M  CM   D  CD   C XC  L XL  X IX V IV I]
 []
+
+;; 105. Identify keys and values
+;; Given an input sequence of keywords and numbers, create a map such that
+;; each key in the map is a keyword, and the value is a sequence of all
+;; the numbers (if any) between it and the next keyword in the sequence.
+;; (= {:a [1 2 3], :b [], :c [4]} (__ [:a 1 2 3 :b :c 4]))
+(fn [s]
+  (apply hash-map
+         (mapcat
+          (fn [[ks v]] (concat (mapcat #(vector % []) (drop-last ks))
+                               [(last ks) v]))
+          (partition 2 (partition-by keyword? s)))))
+
+;; katox's solution
+(fn [s]
+  (reduce (fn [r [k v]] (assoc (into r (zipmap k (repeat []))) (last k) v))
+          {}
+          (partition 2 (partition-by keyword? s))))
+
+;; daowen's solution
+#(->> (partition-by keyword? %)
+      (mapcat (fn [[k :as v]] (if (keyword? k) (interpose [] v) [v])))
+      (apply hash-map))
+
+;; chouser's solution
+(fn f [[k & v]]
+  (if v
+    (let [[a b] (split-with number? v)]
+      (assoc (f b) k a))
+    {}))
