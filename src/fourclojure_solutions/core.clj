@@ -1423,3 +1423,20 @@ reduce #((if (% %2) disj conj) % %2)
     (let [[a b] (split-with number? v)]
       (assoc (f b) k a))
     {}))
+
+
+;; 106. Number Maze
+;; Given a pair of numbers, the start and end point, find a path
+;; between the two using only three possible operations:
+;; - double
+;; - halve (odd numbers cannot be halved)
+;; - add 2
+;; Find the shortest path through the "maze". Because there are
+;; multiple shortest paths, you must return the length of the shortest
+;; path, not the path itself.
+;; (= 5 (__ 9 12)) ; 9 11 22 24 12
+#(loop [s #{%}, i 1]
+   (if (s %2) i
+       (recur
+        (set (mapcat (juxt * / +) s (repeat 2)))
+        (inc i))))
