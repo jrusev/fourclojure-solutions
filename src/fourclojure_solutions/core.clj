@@ -1440,3 +1440,9 @@ reduce #((if (% %2) disj conj) % %2)
        (recur
         (set (mapcat (juxt * / +) s (repeat 2)))
         (inc i))))
+
+;; 107. Simple closures
+;; Given a positive integer n, return a function which computes x^n.
+;; (= [1 8 27 64] (map (__ 3) [1 2 3 4]))
+#(fn [x] (reduce * (repeat % x)))
+#(fn [x] (Math/pow x %))
