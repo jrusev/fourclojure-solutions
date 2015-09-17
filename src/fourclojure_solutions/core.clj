@@ -1446,3 +1446,30 @@ reduce #((if (% %2) disj conj) % %2)
 ;; (= [1 8 27 64] (map (__ 3) [1 2 3 4]))
 #(fn [x] (reduce * (repeat % x)))
 #(fn [x] (Math/pow x %))
+
+;; 108. Lazy Searching
+;; Given any number of sequences, each sorted from smallest to
+;; largest, find the smallest number which appears in each sequence.
+;; The sequences may be infinite, so be careful to search lazily.
+;; (= 4 (__ [1 2 3 4 5 6 7] [0.5 3/2 4 19]))
+(fn f [& s]
+  (let [h (map first s)
+        x (apply max h)]
+    (if (every? #{x} h)
+      x
+      (apply f (map #(drop-while (partial > x) %) s)))))
+
+;; chouser's solution
+#(let [a (map first %&)
+       b (apply min a)]
+   (if (apply = a)
+     b
+     (recur (map (fn [[x & y :as z]] (if (= x b) y z)) %&))))
+
+;; cgrand's solution
+#(let [s (sort-by first %&)
+        [[x & z]] s]
+    (if (= x (first (last s)))
+      x
+      (recur (cons z (next s)))))
+
