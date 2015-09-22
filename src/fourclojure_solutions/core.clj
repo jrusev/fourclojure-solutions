@@ -1473,3 +1473,26 @@ reduce #((if (% %2) disj conj) % %2)
       x
       (recur (cons z (next s)))))
 
+;; 110. Sequence of pronunciations
+;; Write a function that returns a lazy sequence of "pronunciations" of a
+;; sequence of numbers. A pronunciation of each element in the sequence
+;; consists of the number of repeating identical numbers and the number itself.
+;; For example, [1 1] is pronounced as [2 1] ("two ones"), which in turn is
+;; pronounced as [1 2 1 1] ("one two, one one"). Your function should accept an
+;; initial sequence of numbers, and return an infinite lazy sequence of
+;; pronunciations, each element being a pronunciation of the previous element.
+;; (= [1 1 1 3 2 1 3 2 1 1] (nth (__ [1]) 6))
+;; [1]
+;; [1 1]
+;; [2 1]
+;; [1 2 1 1]
+;; [1 1 1 2 2 1]
+;; [3 1 2 2 1 1]
+;; [1 3 1 1 2 2 2 1]
+;; [1 1 1 3 2 1 3 2 1 1]
+(fn f [s]
+  (let [x (mapcat #(vector (count %) (first %)) (partition-by identity s))]
+    (lazy-seq (cons x (f x)))))
+
+;; chouser's solution
+(fn [s] (rest (iterate #(mapcat (juxt count first) (partition-by identity %)) s)))
