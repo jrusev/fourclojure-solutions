@@ -48,7 +48,7 @@ reduce #(do %2)
 (fn [s]
   (loop [s s res ()]
     (if (empty? s) res
-      (recur (next s) (conj res (first s))))))
+        (recur (next s) (conj res (first s))))))
 
 ;; 24. Sum It All Up
 ;; Write a function which returns the sum of a sequence of numbers.
@@ -66,10 +66,10 @@ filter odd?
 ;; Write a function which returns the first X fibonacci numbers.
 ;; (= (__ 8) '(1 1 2 3 5 8 13 21))
 #(loop [s [1 1]]
-  (if (= % (count s)) s
-      (let [f1 (-> s butlast last)
-            f2 (last s)]
-        (recur (conj s (+ f1 f2))))))
+   (if (= % (count s)) s
+       (let [f1 (-> s butlast last)
+             f2 (last s)]
+         (recur (conj s (+ f1 f2))))))
 #(take % (map first (iterate (fn [[a b]] [b (+ a b)]) [1 1])))
 #(take % ((fn fib [a b] (cons a (lazy-seq (fib b (+ a b))))) 1 1))
 
@@ -84,7 +84,7 @@ filter odd?
 ;; (true? (__ "racecar"))
 #(= (seq %) (reverse %))
 #(let [median (quot (count %) 2)]
-  (= (take median %) (take median (reverse %))))
+   (= (take median %) (take median (reverse %))))
 
 ;; 28. Flatten a Sequence
 ;; Write a function which flattens a sequence.
@@ -147,7 +147,7 @@ filter odd?
 ;; (= (__ [1 2 3] 2) '(1 1 2 2 3 3))
 (fn [coll n]
   (if (= n 1) coll
-    (apply interleave (repeat n coll))))
+      (apply interleave (repeat n coll))))
 (fn [coll n] (mapcat #(repeat n %) coll))
 #(mapcat (partial repeat %2) %1)
 
@@ -158,7 +158,7 @@ filter odd?
 (fn [l r]
   (loop [rng [l] x (inc l)]
     (if (= x r) rng
-      (recur (conj rng x) (inc x)))))
+        (recur (conj rng x) (inc x)))))
 (fn [x y] (take (- y x) (iterate inc x)))
 (fn [from to]
   (take-while #(< % to)
@@ -443,7 +443,7 @@ reduce #(if ((set %) %2) % (conj % %2)) []
    (cons x (if y (lazy-seq (reduct f (f x y) xs))))))
 
 apply (fn [f i & s]
-       (#(% %) (memoize #(cons i (lazy-seq (map f (% %) s))))))
+        (#(% %) (memoize #(cons i (lazy-seq (map f (% %) s))))))
 
 apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 
@@ -515,20 +515,20 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 ;; Write a function which returns the first x number of prime numbers.
 (fn [n]
   (let [prime? (fn [x] (not (some #(zero? (mod x %)) (range 2 x))))]
-  (take n (filter prime? (iterate inc 2)))))
+    (take n (filter prime? (iterate inc 2)))))
 
 (fn [n]
   (->>
-  (range)
-  (drop 2)
-  (filter (fn [x] (every? #(< 0 (mod x %)) (range 2 x))))
-  (take n)))
+   (range)
+   (drop 2)
+   (filter (fn [x] (every? #(< 0 (mod x %)) (range 2 x))))
+   (take n)))
 
 (fn [x]
- (take x
-       (filter
-        #(= (inc (mod (apply * (range 1N %)) %)) %)
-        (iterate inc 2))))
+  (take x
+        (filter
+         #(= (inc (mod (apply * (range 1N %)) %)) %)
+         (iterate inc 2))))
 
 #(take %2 (remove (set (for [i % j (range (+ i i) 999 i)] j)) %)) (range 2 999)
 
@@ -580,8 +580,8 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
                  (for [[x y] d] ((% x) y)))))
 
 (fn [[[a b c] [d e f] [g h i] :as x]]
-    (some {[:x :x :x] :x [:o :o :o] :o}
-          (list* [a d g] [b e h] [c f i] [a e i] [c e g] x)))
+  (some {[:x :x :x] :x [:o :o :o] :o}
+        (list* [a d g] [b e h] [c f i] [a e i] [c e g] x)))
 
 (fn [b]
   (->> [[0 0 0] [1 1 1] [2 2 2] [0 1 2] [2 1 0]]
@@ -590,9 +590,9 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
        (some {[:x :x :x] :x [:o :o :o] :o})))
 
 (fn [D B] ( ->>
-           `(~@B ~@(apply map list B) ~(D B) ~(-> B reverse D))
-           (some #{[:x :x :x] [:o :o :o]})
-           first)
+            `(~@B ~@(apply map list B) ~(D B) ~(-> B reverse D))
+            (some #{[:x :x :x] [:o :o :o]})
+            first)
   ) (partial map-indexed #(%2 %))
 
 #(some
@@ -614,11 +614,11 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
 
 (fn [s]
   (->> s
-    (re-seq #"[0-9]+")
-    (map #(Integer/parseInt %))
-    (filter #(zero? (mod (Math/sqrt %) 1)))
-    (interpose ",")
-    (apply str)))
+       (re-seq #"[0-9]+")
+       (map #(Integer/parseInt %))
+       (filter #(zero? (mod (Math/sqrt %) 1)))
+       (interpose ",")
+       (apply str)))
 
 ;; 75. Euler's Totient Function
 ;; Two numbers are coprime if their greatest common divisor equals 1.
@@ -761,9 +761,9 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
                 (nil? b) (count a)
                 (= fa fb) (leven ra rb)
                 :else (+ 1
-                        (min (leven ra rb)
-                             (leven a rb)
-                             (leven ra b)))))
+                         (min (leven ra rb)
+                              (leven a rb)
+                              (leven ra b)))))
         (rem-disj [ht e]
           [(dissoc ht e) (ht e)])
         (walkable? [[ht elts]]
@@ -774,7 +774,7 @@ apply (fn [f i & xs] ((fn ff [] (lazy-cat [i] (map f (ff) xs)))))
               (some true? walks))))]
   (fn [st]
     (let [ht (apply merge-with concat
-                (for [a st, b st :when (= 1 (leven a b))] {a [b]}))]
+                    (for [a st, b st :when (= 1 (leven a b))] {a [b]}))]
       (or (some #(walkable? (rem-disj ht %)) st)
           false))))
 
@@ -829,7 +829,7 @@ not=
                  (for [[a b] s [c d] s
                        :when (= b c)]
                    [a d]))]
-      (if (= n s) n (recur n))))
+     (if (= n s) n (recur n))))
 
 ;; youz's solution
 (fn f [s]
@@ -905,7 +905,7 @@ reduce #((if (% %2) disj conj) % %2)
 ;; - You can start at any node.
 ;; - You must visit each edge exactly once.
 ;; - All edges are undirected.
-(letfn [(graph [edges] 
+(letfn [(graph [edges]
           (apply merge-with into (for [[k v] edges] (conj {k [v]} {v [k]}))))
         (connected?
           ([graph]
@@ -1023,11 +1023,11 @@ reduce #((if (% %2) disj conj) % %2)
 
 ;; dlee's solution (10 msecs)
 (defn conn? [m] (loop [xs (group-by first m) k [(key (first xs))]]
-          (if (empty? k)
-            (empty? xs)
-            (recur
-             (apply dissoc xs k)
-             (set (map second (mapcat xs k)))))))
+                  (if (empty? k)
+                    (empty? xs)
+                    (recur
+                     (apply dissoc xs k)
+                     (set (map second (mapcat xs k)))))))
 
 ;; maximental's solution (9500 msecs)
 (defn conn? [g]
@@ -1059,8 +1059,8 @@ reduce #((if (% %2) disj conj) % %2)
 
 ;; dzholev's solution
 #(apply + (map { "M" 1000 "D" 500 "C" 100 "L" 50 "X" 10 "V" 5 "I" 1
-                "CM" 900 "CD" 400 "XC" 90 "XL" 40 "IX" 9 "IV" 4}
-              (re-seq #"C[MD]|X[CL]|I[XV]|." %)))
+                 "CM" 900 "CD" 400 "XC" 90 "XL" 40 "IX" 9 "IV" 4}
+               (re-seq #"C[MD]|X[CL]|I[XV]|." %)))
 
 ;; nikelandjelo's solution
 #(->> (map {\C 100 \D 500 \I 1 \L 50 \M 1000 \V 5 \X 10} %)
@@ -1096,7 +1096,7 @@ reduce #((if (% %2) disj conj) % %2)
   (let [adj [[-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1]]
         update (fn [cell c] (case cell
                               \# (cond
-                                  (< c 2) \ 
+                                  (< c 2) \
                                   (<= 2 c 3) \#
                                   :else \ )
                               (if (= 3 c) \# cell)))]
@@ -1266,8 +1266,8 @@ reduce #((if (% %2) disj conj) % %2)
 
 ;; mouse's solution
 (fn [n & r]
-    (first (filter (fn [nm] (every? #(= 0 (rem nm %)) r))
-                   (iterate #(+ n %) n) )))
+  (first (filter (fn [nm] (every? #(= 0 (rem nm %)) r))
+                 (iterate #(+ n %) n) )))
 
 ;; 101. Levenshtein Distance
 ;; Given two sequences x and y, calculate the Levenshtein distance of
@@ -1468,10 +1468,10 @@ reduce #((if (% %2) disj conj) % %2)
 
 ;; cgrand's solution
 #(let [s (sort-by first %&)
-        [[x & z]] s]
-    (if (= x (first (last s)))
-      x
-      (recur (cons z (next s)))))
+       [[x & z]] s]
+   (if (= x (first (last s)))
+     x
+     (recur (cons z (next s)))))
 
 ;; 110. Sequence of pronunciations
 ;; Write a function that returns a lazy sequence of "pronunciations" of a
