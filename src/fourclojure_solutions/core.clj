@@ -1496,3 +1496,29 @@ reduce #((if (% %2) disj conj) % %2)
 
 ;; chouser's solution
 (fn [s] (rest (iterate #(mapcat (juxt count first) (partition-by identity %)) s)))
+
+;; 177. Balancing Brackets
+;; When parsing a snippet of code it's often a good idea to do a sanity check to
+;; see if all the brackets match up. Write a function that takes in a string and
+;; returns truthy if all square [] round () and curly {} brackets are properly
+;; paired and legally nested, or returns falsey otherwise.
+;; (not (__ "(start, end]"))
+;; (not (__ "["))
+(fn [code]
+  (loop [s [] [b & t] code]
+    (cond
+      (nil? b) (empty? s)
+      (some #{b} "[({") (recur (conj s b) t)
+      (not-any? #{b} "])}") (recur s t)
+      (and (seq s) (= b ({\[ \] \( \) \{ \}} (peek s)))) (recur (pop s) t)
+      :else false)))
+
+;; immo's solution:
+#(empty?
+  (reduce
+    (fn [[h & t :as s] c]
+      (cond
+        (= ({\( \) \{ \} \[ \]} h) c) t
+        ((set "(){}[]") c) (cons c s)
+        :else s))
+      [] %))
