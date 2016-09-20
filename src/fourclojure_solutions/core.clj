@@ -1021,8 +1021,12 @@ reduce #((if (% %2) disj conj) % %2)
                           (conj (disj c s t) (into s t))))
                       #{} edges))))
 
-;; dlee's solution (10 msecs)
-(defn conn? [m] (loop [xs (group-by first m) k [(key (first xs))]]
+;; dlee's solution (20 msecs)
+;; The original solution will fail this test:
+;; (= true (conn? #{[1 2] [2 3]}))
+;; This is fixed here by properly buiding the graph as in lackita's solution.
+(defn conn? [m] (loop [xs (group-by first (mapcat (fn [e] [e (vec (reverse e))]) m))
+                       k [(key (first xs))]]
                   (if (empty? k)
                     (empty? xs)
                     (recur
