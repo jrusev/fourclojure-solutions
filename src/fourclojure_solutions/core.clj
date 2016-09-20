@@ -1014,6 +1014,10 @@ reduce #((if (% %2) disj conj) % %2)
      #{h} r)))
 
 ;; jafingerhut's solution (210 msecs)
+;; Maintain a set of node sets, where each node set is the set of nodes in one
+;; connected component of the graph. It starts out empty, and for each edge
+;; examined, we find the set s containing node 1 (if any), and the set t
+;; containing node 2 (if any), remove both of those sets, and add their union.
 (defn conn? [edges]
   (= 1 (count (reduce (fn [c [u v]]
                         (let [s (or (first (filter #(% u) c)) #{u})
