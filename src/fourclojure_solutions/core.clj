@@ -1001,16 +1001,17 @@ reduce #((if (% %2) disj conj) % %2)
            (= v (set (keys graph)))
            (recur new-v))))))
 
-;; youz's solution (1800 msecs)
-(defn conn? [o]
-  (let [[h & r] (seq o)]
-    ((fn f [c r]
-       (or (empty? r)
-           (let [n (mapcat #(filter (fn [p] (some (set %) p)) r) c)]
-             (if (empty? n) false
-                 (f (reduce conj c n)
-                    (remove (set n) r))))))
-     #{h} r)))
+;; dlee's solution (20 msecs)
+;; The original solution will fail this test:
+;; (= true (conn? #{[1 2] [2 3]}))
+;; This is fixed here by properly buiding the graph as in lackita's solution.
+(defn conn? [m] (loop [xs (group-by first (mapcat (fn [e] [e (vec (reverse e))]) m))
+                      k [(key (first xs))]]
+                 (if (empty? k)
+                   (empty? xs)
+                   (recur
+                    (apply dissoc xs k)
+                    (set (map second (mapcat xs k)))))))
 
 ;; jafingerhut's solution (210 msecs)
 ;; Maintain a set of node sets, where each node set is the set of nodes in one
@@ -1023,27 +1024,6 @@ reduce #((if (% %2) disj conj) % %2)
                               t (or (first (filter #(% v) c)) #{v})]
                           (conj (disj c s t) (into s t))))
                       #{} edges))))
-
-;; dlee's solution (20 msecs)
-;; The original solution will fail this test:
-;; (= true (conn? #{[1 2] [2 3]}))
-;; This is fixed here by properly buiding the graph as in lackita's solution.
-(defn conn? [m] (loop [xs (group-by first (mapcat (fn [e] [e (vec (reverse e))]) m))
-                       k [(key (first xs))]]
-                  (if (empty? k)
-                    (empty? xs)
-                    (recur
-                     (apply dissoc xs k)
-                     (set (map second (mapcat xs k)))))))
-
-;; maximental's solution (9500 msecs)
-(defn conn? [g]
-  ((fn f [e]
-     (#(if (= e %) (= % g) (f %))
-      (reduce (fn [a b] (into a (filter #(some (set b) %) g)))
-              #{}
-              e)))
-   #{(first g)}))
 
 ;; 92. Read Roman numerals
 ;; Roman numerals are easy to recognize, but not everyone knows all
