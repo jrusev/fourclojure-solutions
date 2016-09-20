@@ -905,6 +905,10 @@ reduce #((if (% %2) disj conj) % %2)
 ;; - You can start at any node.
 ;; - You must visit each edge exactly once.
 ;; - All edges are undirected.
+
+;; An undirected graph has an Eulerian trail if and only if exactly zero or two
+;; vertices have odd degree, and if all of its vertices with nonzero degree
+;; belong to a single connected component.
 (letfn [(graph [edges]
           (apply merge-with into (for [[k v] edges] (conj {k [v]} {v [k]}))))
         (connected?
