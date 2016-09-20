@@ -991,16 +991,15 @@ reduce #((if (% %2) disj conj) % %2)
 (def g (graph 100)) ;; graph with 100 nodes (~1000 edges)
 (time (dotimes [_ 10] (conn? g))) ;; 10 times
 
-;; lackita's solution (34 msecs)
+;; lackita's solution (34 msecs), slightly modified to use a loop.
 (defn conn? [edges]
   (let [graph (group-by first (mapcat (fn [e] [e (vec (reverse e))])
                                       edges))]
-    ((fn traverse [v]
+    (loop [v #{(first (keys graph))}]
        (let [new-v (into v (map last (mapcat graph v)))]
          (if (= new-v v)
            (= v (set (keys graph)))
-           (traverse new-v))))
-     #{(first (keys graph))})))
+           (recur new-v))))))
 
 ;; youz's solution (1800 msecs)
 (defn conn? [o]
